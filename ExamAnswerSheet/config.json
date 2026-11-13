@@ -1,54 +1,9 @@
 {
-  "title": "CompTIA Security+ practice exam",
+  "title": "Exam Answer Sheet",
   "totalQuestions": 90,
   "timerMinutes": 90,
   "warnMinutes": 10,
   "optionLetters": "ABCDE",
-  "multiQuestions": [30, 66, 89],
-  "pbq": [
-    {
-      "number": 1, "format": "answer-id",
-      "items": [
-        { "id": "1a", "type": "letter", "letters": "ABCDE" },
-        { "id": "1b", "type": "letter", "letters": "ABCDE" },
-        { "id": "1c", "type": "letter", "letters": "ABCDE" },
-        { "id": "1d", "type": "letter", "letters": "ABCDE" },
-        { "id": "1e", "type": "letter", "letters": "ABCDE" }
-      ]
-    },
-    {
-      "number": 2, "format": "id-answer",
-      "items": [
-        { "id": "2a", "type": "letter", "letters": "ABCD" },
-        { "id": "2b", "type": "letter", "letters": "ABCD" },
-        { "id": "2c", "type": "letter", "letters": "ABCD" },
-        { "id": "2d", "type": "letter", "letters": "ABCD" }
-      ]
-    },
-    {
-      "number": 3, "format": "inline",
-      "items": [
-        { "id": "3", "type": "order", "letters": "ABCDEF" }
-      ]
-    },
-    {
-      "number": 4, "format": "id-answer",
-      "items": [
-        { "id": "4a", "type": "allowdeny" },
-        { "id": "4b", "type": "allowdeny" },
-        { "id": "4c", "type": "allowdeny" },
-        { "id": "4d", "type": "letter", "letters": "ABCD" }
-      ]
-    },
-    {
-      "number": 5, "format": "answer-id",
-      "items": [
-        { "id": "5a", "type": "letter", "letters": "ABCDE" },
-        { "id": "5b", "type": "letter", "letters": "ABCDE" },
-        { "id": "5c", "type": "letter", "letters": "ABCDE" },
-        { "id": "5d", "type": "letter", "letters": "ABCDE" },
-        { "id": "5e", "type": "letter", "letters": "ABCDE" }
-      ]
-    }
-  ]
+  "multiQuestions": [],
+  "pbq": []
 }

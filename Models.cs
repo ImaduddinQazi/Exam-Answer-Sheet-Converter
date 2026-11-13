@@ -9,37 +9,27 @@ namespace ExamAnswerSheet;
 // =====================================================================
 public class ExamConfig
 {
-    public string Title { get; set; } = "Practice exam";
-    /// <summary>Total questions INCLUDING the PBQs (PBQs are Q1-Q5, the grid starts after them).</summary>
+    public string Title { get; set; } = "Exam Answer Sheet";
+    /// <summary>Total questions in the exam.</summary>
     public int TotalQuestions { get; set; } = 90;
     public int TimerMinutes { get; set; } = 90;
     public int WarnMinutes { get; set; } = 10;
     public string OptionLetters { get; set; } = "ABCDE";
-    public List<int> MultiQuestions { get; set; } = new() { 30, 66, 89 };
+    public List<int> MultiQuestions { get; set; } = new();
     public List<PbqGroupDef> Pbq { get; set; } = new();
 
     /// <summary>Built-in layout, used when config.json is missing or broken.</summary>
     public static ExamConfig CreateDefault()
     {
-        static PbqItemDef L(string id, string letters) => new() { Id = id, Type = "letter", Letters = letters };
-        static PbqItemDef AD(string id) => new() { Id = id, Type = "allowdeny" };
-
         return new ExamConfig
         {
-            Title = "CompTIA Security+ practice exam",
-            Pbq = new List<PbqGroupDef>
-            {
-                new() { Number = 1, Format = "answer-id", Items = new List<PbqItemDef>
-                    { L("1a","ABCDE"), L("1b","ABCDE"), L("1c","ABCDE"), L("1d","ABCDE"), L("1e","ABCDE") } },
-                new() { Number = 2, Format = "id-answer", Items = new List<PbqItemDef>
-                    { L("2a","ABCD"), L("2b","ABCD"), L("2c","ABCD"), L("2d","ABCD") } },
-                new() { Number = 3, Format = "inline", Items = new List<PbqItemDef>
-                    { new() { Id = "3", Type = "order", Letters = "ABCDEF" } } },
-                new() { Number = 4, Format = "id-answer", Items = new List<PbqItemDef>
-                    { AD("4a"), AD("4b"), AD("4c"), L("4d","ABCD") } },
-                new() { Number = 5, Format = "answer-id", Items = new List<PbqItemDef>
-                    { L("5a","ABCDE"), L("5b","ABCDE"), L("5c","ABCDE"), L("5d","ABCDE"), L("5e","ABCDE") } },
-            }
+            Title = "Exam Answer Sheet",
+            TotalQuestions = 90,
+            TimerMinutes = 90,
+            WarnMinutes = 10,
+            OptionLetters = "ABCDE",
+            MultiQuestions = new List<int>(),
+            Pbq = new List<PbqGroupDef>()
         };
     }
 }

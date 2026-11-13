@@ -26,7 +26,6 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<object> _entries = new();   // what the ListBox shows
     private ICollectionView _view = null!;
     private string _filter = "All";
-    private Dictionary<string, string>? _key;               // loaded key.json
 
     // ---------------------------------------------------------------- timer
     private readonly DispatcherTimer _tick = new() { Interval = TimeSpan.FromMilliseconds(250) };
@@ -49,9 +48,17 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        var workArea = SystemParameters.WorkArea;
+        if (Height > workArea.Height - 30)
+            Height = Math.Max(MinHeight, workArea.Height - 40);
+        if (Width > workArea.Width - 30)
+            Width = Math.Max(MinWidth, workArea.Width - 40);
+
         _config = ExamIO.LoadConfig();
         _state = ExamIO.LoadState();
-        Title = "ExamAnswerSheet - " + _config.Title;
+        Title = string.IsNullOrWhiteSpace(_config.Title) || _config.Title.Equals("Exam Answer Sheet", StringComparison.OrdinalIgnoreCase)
+            ? "Exam Answer Sheet"
+            : $"Exam Answer Sheet - {_config.Title}";
 
         ApplyTheme(_state.Dark);
         BuildItems();
@@ -74,7 +81,7 @@ public partial class MainWindow : Window
             if (ExamIO.ConfigWarning != null)
                 MessageBox.Show(this,
                     "config.json could not be read, so the built-in layout is used.\n\n" + ExamIO.ConfigWarning,
-                    "ExamAnswerSheet", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    "Exam Answer Sheet", MessageBoxButton.OK, MessageBoxImage.Warning);
 
             // Put the keyboard focus on the first row so the shortcuts work straight away.
             Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
@@ -410,7 +417,7 @@ public partial class MainWindow : Window
             MessageBox.Show(this,
                 "The result file could not be saved:\n" + ex.Message +
                 "\n\nThe exam is NOT finished. Use File > Export to TXT to save it somewhere else.",
-                "ExamAnswerSheet", MessageBoxButton.OK, MessageBoxImage.Error);
+                "Exam Answer Sheet", MessageBoxButton.OK, MessageBoxImage.Error);
             if (wasRunning) StartTimer();
             return;
         }
@@ -456,7 +463,7 @@ public partial class MainWindow : Window
     private void OpenFile_Click(object sender, RoutedEventArgs e)
     {
         try { Process.Start(new ProcessStartInfo(_state.SavedPath) { UseShellExecute = true }); }
-        catch (Exception ex) { MessageBox.Show(this, "Could not open the file:\n" + ex.Message, "ExamAnswerSheet"); }
+        catch (Exception ex) { MessageBox.Show(this, "Could not open the file:\n" + ex.Message, "Exam Answer Sheet"); }
     }
 
     private void OpenFolder_Click(object sender, RoutedEventArgs e)
@@ -468,7 +475,7 @@ public partial class MainWindow : Window
             else
                 Process.Start(new ProcessStartInfo(ExamIO.ExamsFolder) { UseShellExecute = true });
         }
-        catch (Exception ex) { MessageBox.Show(this, "Could not open the folder:\n" + ex.Message, "ExamAnswerSheet"); }
+        catch (Exception ex) { MessageBox.Show(this, "Could not open the folder:\n" + ex.Message, "Exam Answer Sheet"); }
     }
 
     private void CopyResults_Click(object sender, RoutedEventArgs e)
@@ -530,7 +537,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, "Could not copy to the clipboard:\n" + ex.Message, "ExamAnswerSheet");
+            MessageBox.Show(this, "Could not copy to the clipboard:\n" + ex.Message, "Exam Answer Sheet");
             return false;
         }
     }
@@ -553,7 +560,7 @@ public partial class MainWindow : Window
         try { File.WriteAllText(dlg.FileName, text, new UTF8Encoding(false)); }
         catch (Exception ex)
         {
-            MessageBox.Show(this, "Could not save the file:\n" + ex.Message, "ExamAnswerSheet",
+            MessageBox.Show(this, "Could not save the file:\n" + ex.Message, "Exam Answer Sheet",
                 MessageBoxButton.OK, MessageBoxImage.Error);
             return;
         }
@@ -578,42 +585,7 @@ public partial class MainWindow : Window
             Directory.CreateDirectory(ExamIO.ExamsFolder);
             Process.Start(new ProcessStartInfo(ExamIO.ExamsFolder) { UseShellExecute = true });
         }
-        catch (Exception ex) { MessageBox.Show(this, ex.Message, "ExamAnswerSheet"); }
-    }
-
-    private void Menu_LoadKey(object sender, RoutedEventArgs e)
-    {
-        MenuPopup.IsOpen = false;
-        var dlg = new OpenFileDialog
-        {
-            Title = "Load answer key",
-            Filter = "Answer key (*.json)|*.json|All files (*.*)|*.*",
-            InitialDirectory = ExamIO.AppDir
-        };
-        if (dlg.ShowDialog(this) != true) return;
-        try
-        {
-            _key = ExamIO.LoadKey(dlg.FileName);
-            StatusText.Text = $"Answer key loaded ({_key.Count} answers).";
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(this, "The key file could not be read:\n" + ex.Message, "ExamAnswerSheet",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
-
-    private void Menu_Score(object sender, RoutedEventArgs e)
-    {
-        MenuPopup.IsOpen = false;
-        if (_key == null)
-        {
-            MessageBox.Show(this, "Load an answer key first (File > Load answer key, or the \"Load key\" button).",
-                "ExamAnswerSheet");
-            return;
-        }
-        var (summary, rows) = ExamIO.Score(_allItems, _key);
-        new ScoreWindow(summary, rows) { Owner = this }.ShowDialog();
+        catch (Exception ex) { MessageBox.Show(this, ex.Message, "Exam Answer Sheet"); }
     }
 
     // =================================================================
