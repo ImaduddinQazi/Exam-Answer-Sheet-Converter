@@ -1,0 +1,196 @@
+<Application x:Class="ExamAnswerSheet.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Theme brushes. MainWindow swaps this dictionary for Dark.xaml at runtime. -->
+                <ResourceDictionary Source="Themes/Light.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- ============ Normal action button ============ -->
+            <Style x:Key="ActionButton" TargetType="Button">
+                <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextFg}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderBr}"/>
+                <Setter Property="Padding" Value="14,6"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                                    CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.45"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ============ Primary (accent colored) button ============ -->
+            <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource ActionButton}">
+                <Setter Property="Background" Value="{DynamicResource Accent}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AccentFg}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource Accent}"/>
+            </Style>
+
+            <!-- ============ A / B / C / D / E answer button.
+                 DataContext is an OptionVM; the DataTrigger paints the selected state. ============ -->
+            <Style x:Key="OptionButton" TargetType="Button">
+                <Setter Property="Width" Value="46"/>
+                <Setter Property="Height" Value="38"/>
+                <Setter Property="Margin" Value="0,0,6,0"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Background" Value="{DynamicResource ButtonBg}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextFg}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderBr}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource Accent}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource AccentFg}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- ============ Filter chips (RadioButton looking like a pill) ============ -->
+            <Style x:Key="ChipRadio" TargetType="RadioButton">
+                <Setter Property="Foreground" Value="{DynamicResource TextFg}"/>
+                <Setter Property="Padding" Value="14,6"/>
+                <Setter Property="Margin" Value="0,0,6,0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border x:Name="Bd" Background="{DynamicResource ButtonBg}"
+                                    BorderBrush="{DynamicResource BorderBr}" BorderThickness="1"
+                                    CornerRadius="16" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Accent}"/>
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource AccentFg}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ============ IDK / MAYBE / Multi checkboxes drawn as chips.
+                 The CheckBox.Tag holds the brush used when checked. ============ -->
+            <Style x:Key="ChipCheck" TargetType="CheckBox">
+                <Setter Property="Foreground" Value="{DynamicResource TextFg}"/>
+                <Setter Property="Padding" Value="14,0"/>
+                <Setter Property="Height" Value="38"/>
+                <Setter Property="Margin" Value="8,0,0,0"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="CheckBox">
+                            <Grid>
+                                <Border x:Name="Bd" Background="{DynamicResource ButtonBg}"
+                                        BorderBrush="{DynamicResource BorderBr}" BorderThickness="1" CornerRadius="8"/>
+                                <Border x:Name="Fill" Background="{TemplateBinding Tag}" CornerRadius="8" Opacity="0"/>
+                                <ContentPresenter x:Name="Cp" Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Fill" Property="Opacity" Value="1"/>
+                                    <Setter TargetName="Cp" Property="TextElement.Foreground" Value="White"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ============ One row of the answer list ============ -->
+            <Style x:Key="RowItem" TargetType="ListBoxItem">
+                <Setter Property="Margin" Value="0,0,0,6"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Focusable" Value="True"/>
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border x:Name="Bd" Background="{DynamicResource CardBg}"
+                                    BorderBrush="{DynamicResource BorderBr}" BorderThickness="1"
+                                    CornerRadius="10" Padding="12,8">
+                                <ContentPresenter/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ============ Entry in the File popup menu ============ -->
+            <Style x:Key="MenuItemButton" TargetType="Button">
+                <Setter Property="Foreground" Value="{DynamicResource TextFg}"/>
+                <Setter Property="Padding" Value="12,9"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" Background="Transparent" CornerRadius="6"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonBg}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,12 @@
+{
+  "name": "Sample key - replace with the real answers of your practice test",
+  "answers": {
+    "1a": "C", "1b": "E", "1c": "A", "1d": "D", "1e": "B",
+    "2a": "B", "2b": "B", "2c": "B", "2d": "A",
+    "3": "CEFADB",
+    "4a": "allow", "4b": "deny", "4c": "deny", "4d": "A",
+    "5a": "B", "5b": "D", "5c": "A", "5d": "E", "5e": "C",
+    "6": "B", "7": "B", "8": "A", "9": "C", "10": "D",
+    "12": "A", "30": "A C", "68": "A", "89": "B D"
+  }
+}

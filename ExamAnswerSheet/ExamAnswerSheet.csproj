@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ExamAnswerSheet</RootNamespace>
+    <AssemblyName>ExamAnswerSheet</AssemblyName>
+    <Version>1.1.0</Version>
+  </PropertyGroup>
+
+  <!-- config.json and key.json are copied NEXT TO the exe (not packed inside it),
+       so you can edit them without recompiling. -->
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
+    <None Update="key.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
+  </ItemGroup>
+
+</Project>
